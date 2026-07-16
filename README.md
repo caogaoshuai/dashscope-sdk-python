@@ -455,8 +455,14 @@ dashscope oss upload -m qwen-plus --file data.jsonl
 
 ### Agentic RL (Reinforcement Learning)
 
+Agentic RL uses the same registration, dataset, submission, and lifecycle
+commands for regular reinforcement training and OPD. Select the training type
+in the YAML configuration. Regular reinforcement training requires a custom
+Rollout and at least one Reward. Only OPD makes Rollout and Reward optional;
+OPD additionally requires `teacher_model`.
+
 ```shell
-# Register reward/rollout functions
+# Optional for OPD: register custom Rollout/Reward functions when needed
 dashscope rl register_functions \
     --rollout-classpaths rollout.py:MyRollout \
     --reward-classpaths reward.py:MyReward
@@ -467,8 +473,13 @@ dashscope rl test_functions instance-xxx --type reward --input '{"key": "value"}
 # Upload training data
 dashscope rl upload_data --training-files train.jsonl
 
-# Run RL training workflow
-dashscope rl run -c config.yaml
+# Run regular reinforcement training
+dashscope rl run \
+    -c dashscope/finetune/reinforcement/examples/workspace/rl-job.yaml
+
+# Run OPD.
+dashscope rl run \
+    -c dashscope/finetune/reinforcement/examples/workspace/opd-job.yaml
 
 # Monitor jobs
 dashscope rl list
@@ -476,6 +487,10 @@ dashscope rl get job-xxx
 dashscope rl logs job-xxx
 dashscope rl cancel job-xxx
 ```
+
+See the [Agentic RL workspace guide](dashscope/finetune/reinforcement/examples/workspace/README.md)
+for the configuration differences between regular reinforcement training and
+OPD.
 
 ### Legacy Command Support
 
